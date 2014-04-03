@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration scan="true">
+
+  <!-- ########################################################## -->
+  <!-- JMX Configurator -->
+  <jmxConfigurator />
+  <!-- ########################################################## -->
+
+  <!-- ########################################################## -->
+  <!-- Appenders -->
+  <!-- Console -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS, UTC} UTC | [%thread] | %-5level | %logger.%M - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <!-- ########################################################## -->
+
+  <!-- ########################################################## -->
+  
+  <logger name="ua.infinity.studies.cryptography" level="INFO" />
+  
+  <!-- ROOT Logger -->
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </root>
+  <!-- ########################################################## -->
+</configuration>

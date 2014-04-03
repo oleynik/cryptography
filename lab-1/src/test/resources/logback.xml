@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration scan="true">
+
+  <property name="serviceLogs" value="/srv/mobiscopeStreaming" />
+  <!-- ########################################################## -->
+  <!-- JMX Configurator -->
+  <jmxConfigurator />
+  <!-- ########################################################## -->
+
+  <!-- ########################################################## -->
+  <!-- Appenders -->
+  <!-- Console -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS, UTC} UTC | [%thread] | %-5level | %logger.%M - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="ASYNC-STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+    <param name="QueueCapacity" value="10000" />
+    <param name="IncludeCallerData" value="true" />
+    <appender-ref ref="STDOUT" />
+  </appender>
+
+  <!-- Main File -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${serviceLogs}/main.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${serviceLogs}/main.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS, UTC} UTC | [%thread] | %-5level | %logger.%M - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+    <param name="QueueCapacity" value="10000" />
+    <param name="IncludeCallerData" value="true" />
+    <appender-ref ref="FILE" />
+  </appender>
+
+  <!-- Error File -->
+  <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${serviceLogs}/error.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${serviceLogs}/error.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS, UTC} UTC | [%thread] | %-5level | %logger.%M - %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+  <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+    <param name="QueueCapacity" value="10000" />
+    <param name="IncludeCallerData" value="true" />
+    <appender-ref ref="ERROR_FILE" />
+  </appender>
+  
+  <!-- Log File of Notifications -->
+  <appender name="NOTIFICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${serviceLogs}/notification.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${serviceLogs}/notification.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS, UTC} UTC | [%thread] | %-5level | %logger.%M - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="ASYNC-NOTIFICATION" class="ch.qos.logback.classic.AsyncAppender">
+    <param name="QueueCapacity" value="10000" />
+    <param name="IncludeCallerData" value="true" />
+    <appender-ref ref="NOTIFICATION" />
+  </appender>
+  <!-- ########################################################## -->
+
+  <!-- ########################################################## -->
+
+  <logger name="org.dozer" level="INFO" />
+  <logger name="org.springframework" level="INFO" />
+  <logger name="org.springframework.security" level="INFO" />
+  <logger name="ag.shape.mobiscope.persistence" level="DEBUG" />
+  <logger name="org.apache" level="WARN" />
+  <logger name="org.apache.http" level="DEBUG" />
+  <logger name="org.apache.activemq" level="TRACE" />
+  <logger name="net.sf.ehcache" level="INFO" />
+  <logger name="ag.shape.mobiscope" level="TRACE" />
+  <logger name="ag.shape.mobiscope.stream.services.VideoStorage" level="DEBUG" />
+  <logger name="ag.shape.mobiscope.stream.services.StreamingService" level="DEBUG" />
+  <logger name="ag.shape.mobiscope.stream.services.CameraEventService" level="DEBUG" />
+  <logger name="ag.shape.mobiscope.stream.persistence.CameraEventRepositoryImpl" level="DEBUG" />
+  <logger name="ag.shape.mobiscope.stream.server.handlers.MpegTsPacketHandler" level="DEBUG" />
+  <logger name="ag.shape.mobiscope.stream.server.handlers.MpegTsSocketHandler" level="INFO" />
+  
+  <logger name="org.springframework.jms" level="TRACE" additivity="false">
+    <appender-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  <logger name="org.springframework.jms.listener.DefaultMessageListenerContainer" level="DEBUG" additivity="false">
+    <appeder-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  <logger name="ag.shape.mobiscope.stream.jms" level="TRACE" additivity="false">
+    <appender-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  <logger name="ag.shape.mobiscope.stream.services.NotificationServiceImpl" level="TRACE" additivity="false">
+    <appender-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  <logger name="ag.shape.mobiscope.stream.services.CameraNotificationService" level="TRACE" additivity="false">
+    <appender-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  <logger name="ag.shape.mobiscope.stream.controllers.NotificationController" level="DEBUG" additivity="false">
+    <appender-ref ref="ASYNC-NOTIFICATION" />
+  </logger>
+  
+  <!-- ROOT Logger -->
+  <root level="DEBUG">
+    <appender-ref ref="ASYNC-STDOUT" />
+    <appender-ref ref="ASYNC-FILE" />
+    <appender-ref ref="ASYNC-ERROR" />
+  </root>
+  <!-- ########################################################## -->
+</configuration>
